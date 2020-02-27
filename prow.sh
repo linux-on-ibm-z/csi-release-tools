@@ -394,7 +394,7 @@ run_with_go () {
         run "$@"
     else
         if ! [ -d "${CSI_PROW_WORK}/go-$version" ];  then
-            run curl --fail --location "https://dl.google.com/go/go$version.linux-amd64.tar.gz" | tar -C "${CSI_PROW_WORK}" -zxf - || die "installation of Go $version failed"
+            run curl --fail --location "https://dl.google.com/go/go$version.linux-$(go env GOARCH).tar.gz" | tar -C "${CSI_PROW_WORK}" -zxf - || die "installation of Go $version failed"
             mv "${CSI_PROW_WORK}/go" "${CSI_PROW_WORK}/go-$version"
         fi
         PATH="${CSI_PROW_WORK}/go-$version/bin:$PATH" run "$@"
@@ -431,7 +431,7 @@ install_dep () {
     if dep version 2>/dev/null | grep -q "version:.*${CSI_PROW_DEP_VERSION}$"; then
         return
     fi
-    run curl --fail --location -o "${CSI_PROW_WORK}/bin/dep" "https://github.com/golang/dep/releases/download/v0.5.4/dep-linux-amd64" &&
+    run curl --fail --location -o "${CSI_PROW_WORK}/bin/dep" "https://github.com/golang/dep/releases/download/v0.5.4/dep-linux-$(go env GOARCH)" &&
         chmod u+x "${CSI_PROW_WORK}/bin/dep"
 }
 
